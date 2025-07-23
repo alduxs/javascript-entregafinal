@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors" />
+    <meta name="generator" content="Hugo 0.84.0" />
+    <title>Simuldor de préstamos</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/album/" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        .tasa {
+            background-color: blue;
+            color: #fff;
+            font-weight: 700;
+            border-radius: 50px;
+            padding: 6px;
+            font-size: 0.9rem;
+        }
+        .non-visible{
+            display: none
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="navbar navbar-dark bg-primary shadow-sm">
+            <div class="container">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-coin" viewBox="0 0 16 16" style="margin-right: 10px;">
+                        <path
+                            d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z" />
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                        <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
+                    </svg>
+                    <strong>Préstamos</strong>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pb-5">
+
+        <section class="pt-5 text-center container non-visible" id="prestamo-solicitado">
+            <div class="card border-primary mb-3">
+                <div class="card-header">Prestamo Solicitado</div>
+                <div class="card-body text-primary">
+                    <h5 class="card-title">Usted ya cuenta con un prestamo solicitado</h5>
+                    <p class="card-text" id="ptmonto"></p>
+                    <p class="card-text" id="ptcuotas"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="pt-5 text-center container">
+            <div class="row pt-lg-5">
+                <div class="col-lg-12 col-md-8 mx-auto">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#" id="bttipoprestamo">Tipo de préstamo</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="btsimulador">Simulador</a>
+                        </li>
+                        <!--                        <li class="nav-item">
+                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                        </li>
+                    -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="album py-5">
+            <div class="container" id="contenedor-parent">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="contenedor-prestamos">
+
+   
+
+                </div>
+            </div>
+
+
+            <div class="simulador py-5 non-visible" id="formulario">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <h2 id="titulo-prestamo">l</h2>
+
+                            <form class="row g-3">
+
+                                <div class="col-md-12">
+                                    <label for="monto" class="form-label"><strong>Monto (hasta $5.000.000):</strong></label>
+                                    <input type="text" class="form-control" id="monto" name="monto">
+                                    <p class="text-danger non-visible" style="font-size: 0.8rem;" id="error-monto"></p>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label for="cuotas" class="form-label"><strong>Cantidad de cuotas:</strong></label>
+                                    <select id="cuotas" name="cuotas" class="form-select">
+                                        <option selected>Selecionar la cantidad de cuotas</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                    <p class="text-danger non-visible" style="font-size: 0.8rem;" id="error-cuotas"></p>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label for="edad" class="form-label"><strong>Edad:</strong></label>
+                                    <input type="text" class="form-control" id="edad" name="edad">
+                                    <p class="text-danger non-visible" style="font-size: 0.8rem;" id="error-edad"></p>
+                                </div>
+
+
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-primary" id="simular">Simular</button>
+                                </div>
+                            </form>
+
+
+                        </div>
+
+                        <div class="col-md-6 ">
+
+
+                            <div class="card non-visible" id="simulacionfinal">
+                               
+                            </div>
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+    </main>
+
+    <footer class="text-muted py-5 bg-light">
+        <div class="container">
+           
+            <p class="mb-1">
+                Simulador de Prréstamos - Entrega 2 - Aldo Iñiguez
+            </p>
+            
+        </div>
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
