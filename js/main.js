@@ -64,6 +64,7 @@ if (Prestamotomado.length > 0) {
   ptcuotas.innerHTML = `A devolver en: ${Prestamotomado[1]} cuotas.`;
 }
 
+/*
 const tipoPrestamo = [
   {
     id: "1",
@@ -91,6 +92,7 @@ const tipoPrestamo = [
     alt: "Préstamo compra 0 kilómetro",
   },
 ];
+*/
 
 function creadoraDeCuotas() {
   let contenidoSelect = `<option value="0" selected>Selecionar la cantidad de cuotas</option>`;
