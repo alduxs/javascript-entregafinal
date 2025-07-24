@@ -14,6 +14,7 @@ const ptcuotas = document.getElementById("ptcuotas");
 const contenedorParent = document.getElementById("contenedor-parent");
 const formulario = document.getElementById("formulario");
 const btsolicitar = document.getElementById("btsolicitar");
+const cancelarprestamo = document.getElementById("cancelarprestamo");
 
 //
 const DatosSolicitud = [];
@@ -64,35 +65,20 @@ if (Prestamotomado.length > 0) {
   ptcuotas.innerHTML = `A devolver en: ${Prestamotomado[1]} cuotas.`;
 }
 
-/*
-const tipoPrestamo = [
-  {
-    id: "1",
-    title: "Préstamo Personal",
-    description:
-      "Préstamo personal libre destino, diseñado para volver realidad tus proyectos más deseados.",
-    interest: 55,
-    image: "img/prestamo-personal.jpg",
-    alt: "Préstamo Personal",
-  },
-  {
-    id: "2",
-    title: "Préstamo compra equipamiento",
-    description: "Correa resistente y cómoda, ajustable hasta 2 metros.",
-    interest: 50,
-    image: "img/prestamo-equipamiento.jpg",
-    alt: "Préstamo compra equipamiento",
-  },
-  {
-    id: "3",
-    title: "Préstamo compra 0 kilómetro",
-    description: "Cama ergonómica con espuma de memoria para mayor confort.",
-    interest: 70,
-    image: "img/prestamos-auto.jpg",
-    alt: "Préstamo compra 0 kilómetro",
-  },
-];
-*/
+const tipoPrestamo = [];
+
+async function listaPrestamos() {
+  //productos.innerHTML = ''
+  const res = await fetch("https://aposgran.org.ar/admin/prestamos.php");
+  const data = await res.json();
+
+  //console.log(data.data);
+
+  data.data.forEach((element) => {
+    tipoPrestamo[element.id] = element;
+    creadoraDePrestamos(element);
+  });
+}
 
 function creadoraDeCuotas() {
   let contenidoSelect = `<option value="0" selected>Selecionar la cantidad de cuotas</option>`;
@@ -102,27 +88,27 @@ function creadoraDeCuotas() {
   selectCuotas.innerHTML = contenidoSelect;
 }
 
-function creadoraDePrestamos() {
-  tipoPrestamo.forEach((ele) => {
-    contenedorPrestamos.innerHTML += `
-        <div class="col" id=${ele.id + "P"}>
+function creadoraDePrestamos(element) {
+  //console.log(element.title);
+
+  contenedorPrestamos.innerHTML += `
+        <div class="col" id=${element.id + "P"}>
             <div class="card">
                 <img
-                        src=${ele.image}
-                        alt=${ele.alt}
+                        src=${element.image}
+                        alt=${element.alt}
                 />
                 <div class="card-body">
-                    <h5 class="card-title">${ele.title}</h5>
-                    <p class="card-text">${ele.description}</p>
+                    <h5 class="card-title">${element.title}</h5>
+                    <p class="card-text">${element.description}</p>
                     <div class="alert alert-primary" role="alert">Tasa de interés anual <span class="tasa">${
-                      ele.interest
+                      element.interest
                     }%</span></div>
                     <button class="btn btn-primary sim-prestamo">Simular</button>
 		        </div>
             </div>
         </div>
 `;
-  });
 }
 
 function validarCampos(monto, cuotas, edad) {
@@ -241,30 +227,34 @@ function calculaPrestamo(monto, cuotas, edad) {
 
   simulacionfinal.innerHTML = `
    <div class="card-header">
-                                    Simulación
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Los valores calculados para el prestamo simulado son:</h5>
-                                    <p class="card-text"><strong>Cuota inicial</strong>: ${Prestamo.cuotaInicial}</p>
-                                    <p class="card-text"><strong>Cuota promedio</strong>: ${Prestamo.cuotaPromedio}</p>
-                                    <p class="card-text"><strong>Cuota final</strong>: ${Prestamo.cuotaFinal}</p>
-                                    <p class="card-text"><strong>Gastos administrativos</strong>: ${Prestamo.gastosAdministrativos}</p>
-                                    <p class="card-text"><strong>Ingreso mensual requerido</strong>: ${Prestamo.ingresoRequerido}</p>
+     Simulación
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Los valores calculados para el prestamo simulado son:</h5>
+        <p class="card-text"><strong>Cuota inicial</strong>: ${Prestamo.cuotaInicial}</p>
+        <p class="card-text"><strong>Cuota promedio</strong>: ${Prestamo.cuotaPromedio}</p>
+        <p class="card-text"><strong>Cuota final</strong>: ${Prestamo.cuotaFinal}</p>
+        <p class="card-text"><strong>Gastos administrativos</strong>: ${Prestamo.gastosAdministrativos}</p>
+        <p class="card-text"><strong>Ingreso mensual requerido</strong>: ${Prestamo.ingresoRequerido}</p>
 
-                                </div>
-                                <div class="card-footer text-body-secondary text-center">
-                                    <a href="#" class="btn btn-primary miBoton" id="btsolicitar">Solicitar</a>
-                                </div>`;
+    </div>
+    <div class="card-footer text-body-secondary text-center">
+        <a href="#" class="btn btn-primary miBoton" id="btsolicitar">Solicitar</a>
+    </div>`;
 
   Prestamotomado.push(monto);
   Prestamotomado.push(cuotas);
-  
 }
 
 /* ------------------------------- */
 
 function buscadoraDePrestamoEnLista(id) {
-  return tipoPrestamo.find((el) => el.id + "P" == id);
+  //console.log(id);
+  const partesDelId = id.split("P"); // Divide el string en 'P'
+  const idNumerico = partesDelId[0]; // Obtiene la parte numérica del ID
+
+  //return tipoPrestamo.find((el) => el.id + "P" == id);
+  return tipoPrestamo[idNumerico] || null; // Busca el préstamo por ID numérico
 }
 
 function dadoraDeEventosABoton() {
@@ -287,6 +277,11 @@ function dadoraDeEventosABoton() {
   });
 }
 
+function reloadPage() {
+  location.reload(true);
+  //console.log("Recargando la página...");
+}
+
 simularPrestmo.addEventListener("click", (e) => {
   let montoSolicitar = document.getElementById("monto").value;
   let cantidadCuota = document.getElementById("cuotas").value;
@@ -298,17 +293,57 @@ simularPrestmo.addEventListener("click", (e) => {
   }
 });
 
-simulacionfinal.addEventListener('click', function(event) {
+simulacionfinal.addEventListener("click", function (event) {
   // Verifica si el evento proviene del elemento dinámico
-  if (event.target && event.target.matches('.miBoton')) {
+  if (event.target && event.target.matches(".miBoton")) {
+    Swal.fire({
+      title: "Drag me!",
+      icon: "success",
+      draggable: true,
+    });
+
+    Swal.fire({
+      title: "Felicitaciones!",
+      text: "Usted ha obtenido su prestamo",
+      icon: "success",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ok",
+    }).then((result) => {
+      reloadPage();
+    });
+
     localStorage.setItem("prestamo_tomado", JSON.stringify(Prestamotomado));
   }
 });
 
+cancelarprestamo.addEventListener("click", function (event) {
+  Swal.fire({
+    title: "¿Está seguro?",
+    text: "¿Desea cancelar el préstamo solicitado?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      localStorage.removeItem("prestamo_tomado");
+      prestamoSolicitado.classList.add("non-visible");
+      reloadPage();
+    }
+  });
+});
+
 function main() {
   creadoraDeCuotas();
-  creadoraDePrestamos();
-  dadoraDeEventosABoton();
 }
 
+
+
 main();
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await listaPrestamos();
+  await dadoraDeEventosABoton();
+});
